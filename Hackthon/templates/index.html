@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Meeting Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>AI Meeting Assistant</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" name="audio" required />
+        <button type="submit">Upload & Process</button>
+    </form>
+
+    <div id="result" style="display:none;">
+        <h2>Transcript</h2>
+        <pre id="transcript"></pre>
+        <h2>Summary</h2>
+        <pre id="summary"></pre>
+        <h2>Action Items</h2>
+        <pre id="actions"></pre>
+        <h2>Email Follow-up</h2>
+        <pre id="email"></pre>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            document.getElementById('transcript').textContent = data.transcript;
+            document.getElementById('summary').textContent = data.summary;
+            document.getElementById('actions').textContent = data.action_items;
+            document.getElementById('email').textContent = data.email;
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
